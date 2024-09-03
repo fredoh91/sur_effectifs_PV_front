@@ -1,16 +1,57 @@
+// api.js
 import axios from 'axios';
 
-export const fetchFromAPI = async (endpoint, method = 'GET', body = null) => {
-  try {
-    const response = await axios({
-      method,
-      url: `http://localhost/sur_effectifs_PV_API/public/index.php/api/${endpoint}`,
-      data: body,
-    });
+export const fetchFromAPI_GetAll = async () => {
+    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
 
-    return response.data;
-  } catch (error) {
-    console.error('There has been a problem with your axios operation:', error);
-    throw error;
-  }
+    try {
+        const response = await axios.get(url);
+        const data = response.data;
+
+        const dataAPI_reformat = data["hydra:member"].map((obj) => {
+            const date = new Date(obj.dateSignalement);
+            const date_refor = date.toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            });
+
+            return {
+                id: obj.id,
+                dateSignalement: date_refor,
+                substance: obj.substance,
+                effectifMax15Jours: obj.effectifMax15Jours,
+                qui: obj.qui,
+                signale: obj.signale,
+            };
+        });
+        return dataAPI_reformat;
+    } catch (error) {
+        console.error('Problème dans la requête Axios :', error);
+        throw new Error(`Erreur lors de la récupération des données : ${error.message}`);
+    }
 };
+// export const fetchFromAPI_CreateSurEff = async (data) => {
+//     const res = await fetch(
+//         "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss"
+//     );
+//     const data = await res.json();
+//     const dataAPI_reformat = data["hydra:member"].map((obj) => {
+//         const date = new Date(obj.dateSignalement);
+//         const date_refor = date.toLocaleDateString("fr-FR", {
+//             day: "2-digit",
+//             month: "2-digit",
+//             year: "numeric",
+//         })
+
+//         return {
+//             id: obj.id,
+//             dateSignalement: date_refor,
+//             substance: obj.substance,
+//             effectifMax15Jours: obj.effectifMax15Jours,
+//             qui: obj.qui,
+//             signale: obj.signale,
+//         }
+//     })
+//     return dataAPI_reformat
+// };
