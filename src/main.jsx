@@ -6,13 +6,27 @@ import App from './App.jsx'
 import './index.css'
 import './custom.scss'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Modifier } from './pages/Modifier.jsx'
 
 const queryClient = new QueryClient
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App/>
+  },
+  {
+    path: '/modif/:id',
+    element: <Modifier/>,
+  }
+])
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <RouterProvider router={router}>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </RouterProvider>
   </StrictMode>,
 )

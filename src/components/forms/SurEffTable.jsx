@@ -1,11 +1,16 @@
 
 import { SurEffectifsRow } from "../surEffectifs/SurEffectifsRow";
 
-export function SurEffTable({ surEffectifs }) {
+export function SurEffTable({ surEffectifs, onDelete, onModif }) {
     const rows = [];
     for (let surEffectif of surEffectifs) {
       rows.push(
-        <SurEffectifsRow surEffectif={surEffectif} key={surEffectif.id} />
+        <SurEffectifsRow 
+              surEffectif={surEffectif} 
+              onDelete={onDelete} 
+              onModif={onModif} 
+              key={surEffectif.id} 
+        />
       )
     }
   
@@ -18,6 +23,8 @@ export function SurEffTable({ surEffectifs }) {
             <th>Effectif max. sur 15 jours</th>
             <th>Qui ?</th>
             <th>Signalé</th>
+            <th>Supp.</th>
+            <th>Modif.</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>

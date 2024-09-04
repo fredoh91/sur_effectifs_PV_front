@@ -34,6 +34,42 @@ export const fetchFromAPI_GetAll = async () => {
         throw new Error(`Erreur lors de la récupération des données : ${error.message}`);
     }
 };
+export const fetchFromAPI_GetOne = async (id) => {
+    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+
+    try {
+        const response = await fetch(`${url}/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Erreur dans la réponse du serveur (ou pas de reponse)');
+        }
+        // console.log('response : ',response)
+        const data = await response.json();
+
+            const date = new Date(data.dateSignalement);
+            const date_refor = date.toLocaleDateString("fr-FR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+            });
+
+
+        const dataObj = {
+            id: data.id,
+            dateSignalement: date_refor,
+            substance: data.substance,
+            effectifMax15Jours: data.effectifMax15Jours,
+            qui: data.qui,
+            signale: data.signale,
+        }
+        // console.log('dataObj : ',dataObj)
+
+        return dataObj
+    } catch (error) {
+        console.error('Probleme dans le fetch : ', error);
+        throw new Error(`Erreur lors de la récupération des données : ${error.message}`);
+    }
+};
 export const fetchFromAPI_CreateSurEff = async (data) => {
     const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
 
@@ -54,6 +90,50 @@ export const fetchFromAPI_CreateSurEff = async (data) => {
         return response.status;
     } catch (error) {
         console.error('Erreur de fetch pour creation de ligne :', error);
+        throw new Error(`Erreur lors de la récupération des données : ${error.message}`);
+        // return null;
+    }
+};
+export const fetchFromAPI_DeleteSurEff = async (id) => {
+    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+
+    try {
+        const response = await fetch(url + id, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur serveur');
+        }
+
+        return response.status;
+    } catch (error) {
+        console.error(`Erreur de fetch pour effacement de l'id (${id}) :`, error);
+        throw new Error(`Erreur pour effacement de l'id (${id}) : ${error.message}`);
+        // return null;
+    }
+};
+
+export const fetchFromAPI_ReplaceSurEff = async (id, data) => {
+    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+
+    try {
+        const response = await fetch(url + id, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/ld+json',
+                'Content-Type': 'application/merge-patch+json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur serveur');
+        }
+
+        return response.status;
+    } catch (error) {
+        console.error('Erreur de fetch pour mise à jour de ligne :', error);
         throw new Error(`Erreur lors de la récupération des données : ${error.message}`);
         // return null;
     }

@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-// import { Input } from "./components/forms/Input"
 import { AddSurEffectif } from "./components/forms/AddSurEffectif";
 import { SurEffTable } from "./components/forms/SurEffTable";
 import { SearchBar } from "./components/forms/SearchBar";
 
-import { fetchFromAPI_GetAll } from "./api/api";
-// import { fetchFromAPI } from "./api/api";
-// import { fetchFromAPI } from './api/api_axios'
+import { normalizeString } from './utils/utils'
+import { fetchFromAPI_GetAll, fetchFromAPI_DeleteSurEff } from "./api/api";
 
-function normalizeString(str) {
-  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
+
+
+
 
 function App() {
   const [search, setSearch] = useState("");
@@ -38,8 +36,6 @@ function App() {
 
   useEffect(() => {
     if (dataAPI) {
-      // console.log('useEffect déclenché car modif de dataAPI')
-      // console.log('dataAPI : ' , dataAPI)
       setDataSurEff(dataAPI);
     }
   }, [dataAPI]);
@@ -62,12 +58,52 @@ function App() {
     setDataSurEff(newDataSurEff);
   };
 
+  const handleModifSurEff = (id) => {
+    console.log ('test : ',id);
+  }
+
+  const handleDeleteSurEff = (id) => {
+    // console.log ('test : ',id);
+
+    const fetchDeleteSurEff = async (id) => {
+
+      try {
+        const dataAPI_reformat = await fetchFromAPI_DeleteSurEff(id);
+
+        if (dataAPI_reformat===204) {
+          // l'effacement a bien fonctionné
+          setLoad(false);
+
+          // On recharge 
+          try {
+            const dataAPI_reformat = await fetchFromAPI_GetAll();
+            setDataAPI(dataAPI_reformat);
+            setLoad(true);
+          } catch (error) {
+            console.error('Une erreur s\'est produite lors de la récupération des données :', error);
+            setLoadingError(true)
+          }
+          
+        }
+      } catch (error) {
+        console.error('Une erreur s\'est produite lors de l\'effacement de la donnée :', error);
+        setLoadingError(true)
+      }
+    };
+
+    fetchDeleteSurEff(id)
+  };
+
   return (
     <div className="container my-3">
       {load ? (
         <>
           <SearchBar search={search} onSearchChange={setSearch} />
-          <SurEffTable surEffectifs={visibleSurEffectifs} />
+          <SurEffTable 
+            surEffectifs={visibleSurEffectifs} 
+            onDelete = {handleDeleteSurEff}
+            onModif = {handleModifSurEff}
+          />
           <AddSurEffectif
             dataSurEff={dataSurEff}
             updateDataSurEff={handleUpdateDataSurEff}
@@ -80,7 +116,13 @@ function App() {
         loadingError ? (
           <p>Erreur de chargement.</p>
         ) : (
-          <p>Chargement en cours...</p>
+          <div>
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">
+              </span>
+            </div>
+            <p>Chargement en cours...</p>
+          </div>
         )
       )}
     </div>
