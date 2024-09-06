@@ -11,6 +11,8 @@ import { Modifier } from './pages/Modifier.jsx'
 
 const queryClient = new QueryClient
 
+const baseName = import.meta.env.VITE_REACT_ROUTER_BASENAME
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -20,7 +22,9 @@ const router = createBrowserRouter([
     path: '/modif/:id',
     element: <Modifier/>,
   }
-])
+], {
+  basename: baseName,
+})
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <RouterProvider router={router}>

@@ -3,13 +3,8 @@ import "./App.css";
 import { AddSurEffectif } from "./components/forms/AddSurEffectif";
 import { SurEffTable } from "./components/forms/SurEffTable";
 import { SearchBar } from "./components/forms/SearchBar";
-
-import { normalizeString } from './utils/utils'
+import { normalizeString } from "./utils/utils";
 import { fetchFromAPI_GetAll, fetchFromAPI_DeleteSurEff } from "./api/api";
-
-
-
-
 
 function App() {
   const [search, setSearch] = useState("");
@@ -24,11 +19,13 @@ function App() {
       setDataAPI(dataAPI_reformat);
       setLoad(true);
     } catch (error) {
-      console.error('Une erreur s\'est produite lors de la récupération des données :', error);
-      setLoadingError(true)
+      console.error(
+        "Une erreur s'est produite lors de la récupération des données :",
+        error
+      );
+      setLoadingError(true);
     }
   };
-
 
   useEffect(() => {
     fetchSurEff();
@@ -59,39 +56,38 @@ function App() {
   };
 
   const handleModifSurEff = (id) => {
-    console.log ('test : ',id);
-  }
+    console.log("test : ", id);
+  };
 
   const handleDeleteSurEff = (id) => {
-    // console.log ('test : ',id);
-
     const fetchDeleteSurEff = async (id) => {
-
       try {
         const dataAPI_reformat = await fetchFromAPI_DeleteSurEff(id);
-
-        if (dataAPI_reformat===204) {
+        if (dataAPI_reformat === 204) {
           // l'effacement a bien fonctionné
           setLoad(false);
-
-          // On recharge 
+          // On recharge
           try {
             const dataAPI_reformat = await fetchFromAPI_GetAll();
             setDataAPI(dataAPI_reformat);
             setLoad(true);
           } catch (error) {
-            console.error('Une erreur s\'est produite lors de la récupération des données :', error);
-            setLoadingError(true)
+            console.error(
+              "Une erreur s'est produite lors de la récupération des données :",
+              error
+            );
+            setLoadingError(true);
           }
-          
         }
       } catch (error) {
-        console.error('Une erreur s\'est produite lors de l\'effacement de la donnée :', error);
-        setLoadingError(true)
+        console.error(
+          "Une erreur s'est produite lors de l'effacement de la donnée :",
+          error
+        );
+        setLoadingError(true);
       }
     };
-
-    fetchDeleteSurEff(id)
+    fetchDeleteSurEff(id);
   };
 
   return (
@@ -99,31 +95,27 @@ function App() {
       {load ? (
         <>
           <SearchBar search={search} onSearchChange={setSearch} />
-          <SurEffTable 
-            surEffectifs={visibleSurEffectifs} 
-            onDelete = {handleDeleteSurEff}
-            onModif = {handleModifSurEff}
+          <SurEffTable
+            surEffectifs={visibleSurEffectifs}
+            onDelete={handleDeleteSurEff}
+            onModif={handleModifSurEff}
           />
           <AddSurEffectif
             dataSurEff={dataSurEff}
             updateDataSurEff={handleUpdateDataSurEff}
             setDataAPI={setDataAPI}
             setLoad={setLoad}
-
           />
         </>
+      ) : loadingError ? (
+        <p>Erreur de chargement.</p>
       ) : (
-        loadingError ? (
-          <p>Erreur de chargement.</p>
-        ) : (
-          <div>
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">
-              </span>
-            </div>
-            <p>Chargement en cours...</p>
+        <div>
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden"></span>
           </div>
-        )
+          <p>Chargement en cours...</p>
+        </div>
       )}
     </div>
   );

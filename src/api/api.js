@@ -1,7 +1,8 @@
 // api.js
 export const fetchFromAPI_GetAll = async () => {
-    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
-
+    // const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+    const url = import.meta.env.VITE_API_URL
+    
     try {
         const response = await fetch(url);
 
@@ -35,7 +36,8 @@ export const fetchFromAPI_GetAll = async () => {
     }
 };
 export const fetchFromAPI_GetOne = async (id) => {
-    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+    // const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+    const url = import.meta.env.VITE_API_URL
 
     try {
         const response = await fetch(`${url}/${id}`);
@@ -71,7 +73,8 @@ export const fetchFromAPI_GetOne = async (id) => {
     }
 };
 export const fetchFromAPI_CreateSurEff = async (data) => {
-    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+    // const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss";
+    const url = import.meta.env.VITE_API_URL
 
     try {
         const response = await fetch(url, {
@@ -95,7 +98,8 @@ export const fetchFromAPI_CreateSurEff = async (data) => {
     }
 };
 export const fetchFromAPI_DeleteSurEff = async (id) => {
-    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+    // const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+    const url = import.meta.env.VITE_API_URL + "/"
 
     try {
         const response = await fetch(url + id, {
@@ -115,11 +119,12 @@ export const fetchFromAPI_DeleteSurEff = async (id) => {
 };
 
 export const fetchFromAPI_ReplaceSurEff = async (id, data) => {
-    const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+    // const url = "http://localhost/sur_effectifs_PV_API/public/index.php/api/sur_effectifss/";
+    const url = import.meta.env.VITE_API_URL + "/"
 
     try {
         const response = await fetch(url + id, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 'Accept': 'application/ld+json',
                 'Content-Type': 'application/merge-patch+json'
