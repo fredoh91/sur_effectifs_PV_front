@@ -13,5 +13,6 @@ Currently, two official plugins are available:
 - pour le build de production : VITE_APP_ENV=production npm run build
 
 
+## Adresse locale de l'appli
 
-
+http://localhost/sur_effectifs_PV_front/dist/index.html
