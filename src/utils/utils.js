@@ -1,10 +1,13 @@
 export function convDateFrancaiseEnISO(dateFrancaise) {
   const [jour, mois, annee] = dateFrancaise.split("/");
-  const date = new Date(annee, mois - 1, jour);
-
+  //const date = new Date(annee, mois - 1, jour);
+  const date = new Date(`${annee}-${mois}-${jour}T00:00:00.000Z`);
+  // console.log ('dateFrancaise : ', dateFrancaise)
+  
   // Formatage en chaîne ISO 8601
   const dateISO = date.toISOString();
 
+  // console.log ('dateISO : ', dateISO)
   return dateISO;
 }
 

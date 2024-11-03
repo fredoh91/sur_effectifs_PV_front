@@ -88,7 +88,6 @@ export function Modifier() {
     if (!auMoinsUnChpVide) {
       const newDate = new Date(event.target.dateSignalement.value.trim());
       const newDateFR = newDate.toLocaleDateString("fr-FR");
-      // const currentDate = new Date().toISOString()
       const currentDate = getSQLDatetime();
 
       const newline = {
